@@ -1,3 +1,5 @@
+import { differenceCie76 } from 'd3-color-difference';
+
 export type ColorRGBA = {
     r: number
     g: number
@@ -50,12 +52,7 @@ export function isSameColor(
     b: ColorRGBA,
     tolerance = 0,
 ): boolean {
-    return !(
-        Math.abs(a.r - b.r) > tolerance ||
-        Math.abs(a.g - b.g) > tolerance ||
-        Math.abs(a.b - b.b) > tolerance ||
-        Math.abs(a.a - b.a) > tolerance
-    )
+    return differenceCie76(rgba2hex(a),rgba2hex(b)) < tolerance;
 }
 
 export function hex2RGBA(hex: string, alpha = 255): ColorRGBA {
@@ -124,4 +121,20 @@ export function colorToRGBA(color: string): ColorRGBA {
             'Unsupported color format. Please use CSS rgba, rgb, or HEX!',
         )
     }
+}
+
+
+export function rgba2hex({r,g,b}) {
+    r = r.toString(16);
+    g = g.toString(16);
+    b = b.toString(16);
+  
+    if (r.length == 1)
+      r = "0" + r;
+    if (g.length == 1)
+      g = "0" + g;
+    if (b.length == 1)
+      b = "0" + b;
+  
+    return "#" + r + g + b;
 }
