@@ -1,8 +1,22 @@
+import { differenceCie76 } from 'd3-color-difference'
+
 export type ColorRGBA = {
     r: number
     g: number
     b: number
     a: number
+}
+
+export function rgba2hex({ r, g, b }) {
+    r = r.toString(16)
+    g = g.toString(16)
+    b = b.toString(16)
+
+    if (r.length == 1) r = '0' + r
+    if (g.length == 1) g = '0' + g
+    if (b.length == 1) b = '0' + b
+
+    return '#' + r + g + b
 }
 
 export function getColorAtPixel(
@@ -50,12 +64,7 @@ export function isSameColor(
     b: ColorRGBA,
     tolerance = 0,
 ): boolean {
-    return !(
-        Math.abs(a.r - b.r) > tolerance ||
-        Math.abs(a.g - b.g) > tolerance ||
-        Math.abs(a.b - b.b) > tolerance ||
-        Math.abs(a.a - b.a) > tolerance
-    )
+    return differenceCie76(rgba2hex(a), rgba2hex(b)) < tolerance
 }
 
 export function hex2RGBA(hex: string, alpha = 255): ColorRGBA {
@@ -124,4 +133,37 @@ export function colorToRGBA(color: string): ColorRGBA {
             'Unsupported color format. Please use CSS rgba, rgb, or HEX!',
         )
     }
+}
+
+function padZero(str, len = 2) {
+    const zeros = new Array(len).join('0')
+    return (zeros + str).slice(-len)
+}
+
+export function invertColor(hex): string {
+    if (hex.indexOf('#') === 0) {
+        hex = hex.slice(1)
+    }
+    // convert 3-digit hex to 6-digits.
+    if (hex.length === 3) {
+        hex = hex[0] + hex[0] + hex[1] + hex[1] + hex[2] + hex[2]
+    }
+    if (hex.length !== 6) {
+        throw new Error('Invalid HEX color.')
+    }
+    // invert color components
+    const r = (255 - parseInt(hex.slice(0, 2), 16)).toString(16),
+        g = (255 - parseInt(hex.slice(2, 4), 16)).toString(16),
+        b = (255 - parseInt(hex.slice(4, 6), 16)).toString(16)
+    // pad each with zeros and return
+    return '#' + padZero(r) + padZero(g) + padZero(b)
+}
+
+/**
+ *
+ * @param a
+ * @param b
+ */
+export function isExactlySameColor(a, b) {
+    return a.r === b.r && a.g === b.g && a.b === b.b && a.a === b.a
 }

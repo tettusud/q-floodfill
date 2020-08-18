@@ -4,6 +4,8 @@ import {
     getColorAtPixel,
     colorToRGBA,
     ColorRGBA,
+    invertColor,
+    isExactlySameColor,
 } from './util/colorUtils'
 
 type PixelCoords = {
@@ -37,8 +39,19 @@ export default class FloodFill {
         this._newColor = colorToRGBA(color)
         this._replacedColor = getColorAtPixel(this.imageData, x, y)
         this._tolerance = tolerance
+
         if (isSameColor(this._replacedColor, this._newColor, this._tolerance)) {
-            return
+            // check if both are exactly same color, if not invert fill color, apply twice
+            if (isExactlySameColor(this._replacedColor, this._newColor)) {
+                return
+            }
+            // if not same invert the color
+            this._newColor = colorToRGBA(invertColor(color))
+            this.addToQueue([x, x, y, -1])
+            this.fillQueue()
+            // restore the color back
+            this._newColor = colorToRGBA(color)
+            this._replacedColor = getColorAtPixel(this.imageData, x, y)
         }
 
         this.addToQueue([x, x, y, -1])
