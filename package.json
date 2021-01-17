@@ -62,9 +62,9 @@
   "author": "Pavel Kukov <pavelkukov@gmail.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/pavelkukov/q-floodfill/issues"
+    "url": "https://github.com/tettusud/q-floodfill/issues"
   },
-  "homepage": "https://github.com/pavelkukov/q-floodfill#readme",
+  "homepage": "https://github.com/tettusud/q-floodfill#readme",
   "devDependencies": {
     "@babel/core": "^7.9.0",
     "@babel/preset-env": "^7.9.5",

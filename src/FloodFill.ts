@@ -53,7 +53,6 @@ export default class FloodFill {
             this._newColor = colorToRGBA(color)
             this._replacedColor = getColorAtPixel(this.imageData, x, y)
         }
-
         this.addToQueue([x, x, y, -1])
         this.fillQueue()
     }

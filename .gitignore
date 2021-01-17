@@ -8,3 +8,4 @@ node_modules/
 
 # Generated
 dist/
+.DS_Store
